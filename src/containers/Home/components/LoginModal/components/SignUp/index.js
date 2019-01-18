@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Title, LineInput, SubmitButton, SecondaryOptionText } from './styles'
+import { Mutation } from 'react-apollo'
+import CREATE_USER from './graphql'
 
 class SignUp extends Component {
   constructor(props) {
@@ -27,7 +29,29 @@ class SignUp extends Component {
           onChange={e => this.onChange('password', e)}
           type="password"
         />
-        <SubmitButton>Get Started</SubmitButton>
+        <Mutation mutation={CREATE_USER}>
+          {(createUser, { data }) => {
+            console.log(data)
+            return (
+              <SubmitButton
+                onClick={() => {
+                  createUser({
+                    variables: {
+                      input: {
+                        name: 'David',
+                        email: this.state.email,
+                        password: this.state.password
+                      }
+                    }
+                  })
+                  console.log('button clicked')
+                }}
+              >
+                Get Started
+              </SubmitButton>
+            )
+          }}
+        </Mutation>
         <SecondaryOptionText onClick={this.props.changeMode}>
           Or Login
         </SecondaryOptionText>
